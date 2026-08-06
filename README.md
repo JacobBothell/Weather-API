@@ -20,5 +20,7 @@ install required dependencies `pip install -r requirements.txt`
 ### Run Script
 
 With your venv created above active run `python main.py`
+
 this will start the server on `http://0.0.0.0:8000`
+
 `CTRL+C` can be used to stop the application
