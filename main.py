@@ -1,5 +1,6 @@
 import threading
 import queue
+import time
 
 from dotenv import load_dotenv
 import os
@@ -58,10 +59,9 @@ if __name__ == "__main__":
     for thread in threads:
         thread.start()
 
-    #wait for thread return
     try:
-        for thread in threads:
-            thread.join()
+        while True:
+            time.sleep(100)
     except KeyboardInterrupt:
         print("Keyboard Interrupt Received")
 
