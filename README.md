@@ -24,3 +24,12 @@ With your venv created above active run `python main.py`
 this will start the server on `http://0.0.0.0:8000`
 
 `CTRL+C` can be used to stop the application
+
+
+# Future Improvements
+- Implement and integrate the threaded caching strategy
+- Potentially seperate threads out to seperate processes
+- Add integration of time series DB (InfluxDB / Prometheus / MongoDB) or Elasticsearch for historical data
+- Modify endpoints to enable utilization of external nginx / cloudflare caching
+- Package project into Docker container
+- Implement and integrate the 'Overloading' functionality for improved cache hits
