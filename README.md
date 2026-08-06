@@ -1,2 +1,24 @@
 # Weather-API
 Example Python weather API using FastAPI, caching, request logs, and multithreading
+
+# Run Instructions
+### Python environment
+
+This project was developed on Python 3.10.6, but I believe any Python 3 version should work
+
+initialize a virtual environment `python -m venv .venv`
+
+install required dependencies `pip install -r requirements.txt`
+
+### env configuration
+
+- copy example.env to .env
+- fill out with api keys / user names
+  - an api key for the weather data can be created by going to https://www.weatherapi.com/signup.aspx
+  - the location API is currently not used
+
+### Run Script
+
+With your venv created above active run `python main.py`
+this will start the server on `http://0.0.0.0:8000`
+`CTRL+C` can be used to stop the application
