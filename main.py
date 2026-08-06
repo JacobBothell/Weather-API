@@ -13,10 +13,10 @@ import webAPI
 config_file_name = 'config.json'
 
 if __name__ == "__main__":
+    #load env and config
     with open(config_file_name, 'r') as file:
         config = json.load(file)
 
-    #load env and config
     load_dotenv()
     config['weather_api']['api_key'] = os.getenv("WEATHER_API_KEY")
     config['location_api']['api_user'] = os.getenv("GEO_USERNAME")
@@ -48,8 +48,8 @@ if __name__ == "__main__":
             if 'renew_time' in config['cache']['renew']:
                 webAPI.app.state.cache_max_age = config['cache']['renew']['renew_time']
 
-    threads = []
     #create threads
+    threads = []
     server_thread = threading.Thread(target=webAPI.run_server, daemon=True)
     threads.append(server_thread)
     #cache_thread = threading.Thread(target=cache.run, daemon=True)
@@ -59,6 +59,7 @@ if __name__ == "__main__":
     for thread in threads:
         thread.start()
 
+    #wait for keyboard interrupt to exit
     try:
         while True:
             time.sleep(100)

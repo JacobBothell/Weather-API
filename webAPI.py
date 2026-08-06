@@ -9,6 +9,9 @@ from datetime import datetime
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    '''
+    Function will run first and last allowing for loading / checking info
+    '''
     print("FastAPI Starting")
     if 'weather_api' in app.state:
         if 'url' not in app.state.weather_api:
@@ -27,11 +30,14 @@ async def lifespan(app: FastAPI):
     yield
     print("FastAPI Stopping")
 
+#Initialize Fast API instance
 app = FastAPI(lifespan=lifespan)
 
 def createLog(weather_data: dict, cache_hit: bool) -> bool:
     '''
-    log user request to dictionary
+    log user request to dictionary for later recall
+
+    returns bool of success
     '''
     try:
         #TODO: there is more information about the request in weather_data that might be useful for api metrics but just keeping the weather data portion
@@ -43,8 +49,14 @@ def createLog(weather_data: dict, cache_hit: bool) -> bool:
         return False
 
 def addToCache(weather_data: dict, location: str) -> bool:
+    '''
+    Adds weather api responses to internal cache
+
+    returns bool of success
+    '''
     try:
         app.state.weather_cache[location] = weather_data
+        return True
     except Exception as e:
         print(e)
         return False
@@ -52,6 +64,11 @@ def addToCache(weather_data: dict, location: str) -> bool:
 def getWeatherAPIData(location):
     '''
     reach out to the respective weather api to get fresh data
+
+    currently written to support only api.weatherapi.com
+
+    returns raw request response
+    raises HTTP Exception error on bad response codes
     '''
     weather_data_response = requests.get(app.state.weather_api['url'], params={'key':app.state.weather_api['api_key'], 'q':location})
     if weather_data_response.status_code != 200:
@@ -61,13 +78,19 @@ def getWeatherAPIData(location):
             status_code=weather_data_response.status_code,
             detail=weather_data_response.text
         )
-    #else:
-    #    weather_data = weather_data_response.json()
+
     addToCache(weather_data_response, location)
     return weather_data_response
 
 @app.get('/weather/{location}')
 def weatherAtLocation(location: str):
+    '''
+    Weather data retrieval endpoint
+
+    Utlizes internal cache to reduce external API usage
+
+    Logs user requests to internal memory 'db'
+    '''
     #TODO: need to add some safeguards on the location input to avoid injection from outside users
     #check if location in cache
     cache_hit = False
@@ -88,8 +111,14 @@ def weatherAtLocation(location: str):
 
 @app.get('/requests')
 def getRequestLogs():
+    '''
+    Returns json of user requests from memory 'db'
+    '''
     return app.state.request_logs
 
 def run_server():
+    '''
+    Runs the FastAPI server. This is for threading compatability.
+    '''
     #start gateway interface
     uvicorn.run(app, host="0.0.0.0", port=8000, log_level='debug')
