@@ -1,0 +1,33 @@
+{
+    "weather_api":{
+        "description": "URL the weather data will come from up to required URL encoded variables. Changes may require rewrite of request parser in...",
+        "url": "https://api.weatherapi.com/v1/current.json",
+        "ssl": true,
+        "allow_insecure": false
+    },
+    "location_api":{
+        "description": "URL for finding nearby places to requests. Used for caching extra data that users may want. Changes may require rewrite of request parser in...",
+        "places_url": "https://api.geonames.org/findNearbyPlaceNameJSON",
+        "postal_url": "https://api.geonames.org/postalCodeSearchJSON",
+        "ssl": true,
+        "allow_insecure": false
+    },
+    "cache":{
+        "description": "Parameters for chaching strategies. Used for both weather data and user request data",
+        "renew":{
+            "description": "controls if the cache should self renew and the default time between renews",
+            "should_renew": true,
+            "renew_time": 600
+        },
+        "remove":{
+            "description": "controls if cache should remove information and how old data should be allowed to be",
+            "should_remove": true,
+            "remove_time": 6000
+        },
+        "overload":{
+            "description": "controls if the cache should gather extra data the user may want. currently grabs geographically 'close' locations and how many itterations of that distance should happen",
+            "should_overload": true,
+            "depth": 1
+        }
+    }
+}
